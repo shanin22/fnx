@@ -1,0 +1,147 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>המערכת של שני - דף ראשי</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #6e45e2, #88d3ce);
+      color: #fff;
+      text-align: center;
+      direction: rtl;
+    }
+    header {
+      padding: 50px 20px;
+      background: linear-gradient(135deg, #4a00e0, #8e2de2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    header h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+    header p {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .goals {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .goals h2 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+    .goals ul {
+      list-style: none;
+      padding: 0;
+    }
+    .goals li {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .dashboard-button {
+      background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1em;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .dashboard-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>המערכת של שני</h1>
+    <p>מערכת ויזואליזציה רלוונטית לקבלת החלטות אסטרטגיות ותפעוליות</p>
+  </header>
+  <div class="container">
+    <div class="goals">
+      <h2>מטרות המערכת</h2>
+      <ul>
+        <li>שימור לקוחות</li>
+        <li>עזרה לענף בתחום הביטוח</li>
+        <li>שיפור שירות לקוחות</li>
+        <li>התאמת פתרונות לצרכים המשתנים בשוק</li>
+      </ul>
+    </div>
+    <div class="button-container">
+      <button class="dashboard-button" onclick="window.location.href='dash1.html'">מערכת 1 – ניהול מכירות</button>
+      <button class="dashboard-button" onclick="window.location.href='dash2.html'">מערכת 2 – שביעות רצון ותחזוקת מוצרים</button>
+      <button class="dashboard-button" onclick="window.location.href='dash3.html'">מערכת 3 – ניהול תפעולי ומענה לדרישות רגולציה</button>
+    </div>
+  </div>
+  <script>
+    // Add smooth scroll behavior for better UX
+    document.querySelectorAll('.dashboard-button').forEach(button => {
+      button.addEventListener('click', () => {
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 200);
+      });
+    });
+  </script>
+</body>
+</html>

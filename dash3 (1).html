@@ -1,0 +1,152 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מערכת 3 – ניהול תפעולי ומענה לדרישות רגולציה</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #6e45e2, #88d3ce);
+      color: #fff;
+      text-align: center;
+      direction: rtl;
+    }
+    header {
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #4a00e0, #8e2de2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    header h1 {
+      font-size: 2.2em;
+      margin: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .description {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .description h2 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+    .tableau-container {
+      margin: 20px 0;
+    }
+    .back-button {
+      background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1em;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .back-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>מערכת 3 – ניהול תפעולי ומענה לדרישות רגולציה</h1>
+  </header>
+  <div class="container">
+    <div class="description">
+      <h2>תיאור המערכת</h2>
+      <p>מערכת זו מספקת כלים לניהול תפעולי יעיל ומענה לדרישות רגולטוריות, תוך שימוש בויזואליזציות מתקדמות לניטור תהליכים, זיהוי סיכונים והבטחת עמידה בתקנות.</p>
+    </div>
+    <div class="tableau-container">
+      <div class='tableauPlaceholder' id='viz17510354773560' style='position: relative'>
+        <noscript>
+          <a href='#'><img alt='sheet12' src='https://public.tableau.com/static/images/Bo/Book3-_17510354773560/sheet12/1_rss.png' style='border: none' /></a>
+        </noscript>
+        <object class='tableauViz' style='display:none;'>
+          <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+          <param name='embed_code_version' value='3' />
+          <param name='site_root' value='' />
+          <param name='name' value='Book3-_17510354773560/sheet12' />
+          <param name='tabs' value='no' />
+          <param name='toolbar' value='yes' />
+          <param name='static_image' value='https://public.tableau.com/static/images/Bo/Book3-_17510354773560/sheet12/1.png' />
+          <param name='animate_transition' value='yes' />
+          <param name='display_static_image' value='yes' />
+          <param name='display_spinner' value='yes' />
+          <param name='display_overlay' value='yes' />
+          <param name='display_count' value='no' />
+          <param name='language' value='en-US' />
+          <param name='filter' value=':sid=' />
+          <param name=':redirect' value='auth' />
+        </object>
+      </div>
+      <script type='text/javascript'>
+        var divElement = document.getElementById('viz17510354773560');
+        var vizElement = divElement.getElementsByTagName('object')[0];
+        if (divElement.offsetWidth > 800) { vizElement.style.width='1000px'; vizElement.style.height='827px'; }
+        else if (divElement.offsetWidth > 500) { vizElement.style.width='1000px'; vizElement.style.height='827px'; }
+        else { vizElement.style.width='100%'; vizElement.style.height='727px'; }
+        var scriptElement = document.createElement('script');
+        scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+        vizElement.parentNode.insertBefore(scriptElement, vizElement);
+      </script>
+    </div>
+    <button class="back-button" onclick="window.location.href='index.html'">חזרה לדף הראשי</button>
+  </div>
+  <script>
+    // Button animation
+    document.querySelector('.back-button').addEventListener('click', function() {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => { this.style.transform = 'scale(1)'; }, 200);
+    });
+  </script>
+</body>
+</html>
